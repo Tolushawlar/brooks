@@ -1,6 +1,25 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import Card from "antd/es/card/Card";
+import Paragraph from "antd/es/typography/Paragraph";
+import { Typography } from "antd";
+import { BookOutlined } from "@ant-design/icons";
+import { Row, Col } from "antd";
+import { Layout, Menu, Button } from "antd";
+import { Link } from "react-router-dom";
+import {
+  HomeOutlined,
+  SearchOutlined,
+  InfoCircleFilled,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
+import { useCart } from "../CartContext";
+import { Alert, Space, Spin } from "antd";
+import Title from "antd/es/skeleton/Title";
+
+const { Text } = Typography;
+const { Header } = Layout;
 
 function SearchResults() {
   const location = useLocation();
@@ -10,6 +29,7 @@ function SearchResults() {
   const url = `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&key=${apiKey}`;
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { cart } = useCart();
 
   const fetchBooks = useCallback(async () => {
     setLoading(true);
@@ -54,18 +74,68 @@ function SearchResults() {
   }, [searchQuery, fetchBooks]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Spin style={{ marginTop: 200 }} tip="Loading" size="large">
+        <div className="content" />
+      </Spin>
+    );
   }
 
   return (
-    <div>
-      <h1>Search Results for "{searchQuery}"</h1>
-      <ul>
-        {searchResults.map((result) => (
-          <li key={result.id}>{result.title}</li>
-        ))}
-      </ul>
-    </div>
+    <Layout>
+      <Layout>
+        <Layout className="layout">
+          <Header style={{ display: "flex", justifyContent: "space-between" }}>
+            <div className="logo" style={{ color: "white" }}>
+              {" "}
+              <Link to={"/"} style={{ fontSize: "30px" }}>
+                Brooks
+              </Link>
+            </div>
+            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
+              <Menu.Item key="1" icon={<HomeOutlined />}>
+                <Link to={"/listing"}>Listing</Link>
+              </Menu.Item>
+              <Menu.Item key="2" icon={<SearchOutlined />}>
+                Search
+              </Menu.Item>
+              <Menu.Item key="3" icon={<InfoCircleFilled />}>
+                About
+              </Menu.Item>
+            </Menu>
+            <div>
+              <Button type="primary" style={{ marginRight: "10px" }}>
+                <Link to={"/cart"}>
+                  <ShoppingCartOutlined /> {cart.length}
+                </Link>
+              </Button>
+            </div>
+          </Header>
+        </Layout>
+      </Layout>
+      <Layout style={{ margin: 10, padding: 80 }}>
+        <h1>Search Results for "{searchQuery}"</h1>
+        <Row>
+          {searchResults.map((result) => (
+            <Card
+              hoverable
+              style={{ margin: 10, padding: 30, width: 500 }}
+              key={result.id}
+            >
+              <Col>
+                {/* if({result.imageLinks.thumbnail}){
+                  <img src={result.imageLinks.thumbnail} alt="" />
+                } */}
+                <img src={result.imageLinks.thumbnail} alt="" />
+                <h2>{result.title}</h2>
+                <h4>Author: {result.authors}</h4>
+                <p>Published: {result.publishedDate}</p>
+              </Col>
+            </Card>
+          ))}
+        </Row>
+      </Layout>
+    </Layout>
   );
 }
 

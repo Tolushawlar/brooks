@@ -14,6 +14,7 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { useCart } from "../CartContext";
+import { Alert, Space, Spin } from "antd";
 
 const { Text } = Typography;
 const { Header } = Layout;
@@ -28,7 +29,7 @@ function BookDetails() {
   }, [bookId]);
 
   const fetchBookDetails = async (bookId) => {
-    try {
+    try { 
       const response = await fetch(
         `https://www.googleapis.com/books/v1/volumes/${bookId}`
       );
@@ -44,7 +45,11 @@ function BookDetails() {
   };
 
   if (!book) {
-    return <div>Loading...</div>;
+    return (
+      <Spin tip="Loading" size="large">
+        <div className="content" />
+      </Spin>
+    );
   }
   function removeHtmlTags(input) {
     return input.replace(/<\/?[^>]+(>|$)/g, ""); // This regular expression removes HTML tags
