@@ -29,7 +29,9 @@ function SearchResults() {
   const url = `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&key=${apiKey}`;
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { cart } = useCart();
+  const { cart, addToCart } = useCart();
+  const [category, setCategory] = useState("fiction"); // Default category
+  const [books, setBooks] = useState([]);
 
   const fetchBooks = useCallback(async () => {
     setLoading(true);
@@ -123,13 +125,25 @@ function SearchResults() {
               key={result.id}
             >
               <Col>
-                {/* if({result.imageLinks.thumbnail}){
-                  <img src={result.imageLinks.thumbnail} alt="" />
-                } */}
-                <img src={result.imageLinks.thumbnail} alt="" />
+                <img src={result.imageLinks?.thumbnail} alt="" />
                 <h2>{result.title}</h2>
                 <h4>Author: {result.authors}</h4>
                 <p>Published: {result.publishedDate}</p>
+                <Row>
+                  <Link to={`/book/${result.id}`}>
+                    <Button type="primary" icon={<BookOutlined />}>
+                      View
+                    </Button>
+                  </Link>
+                  <Button
+                    type="primary"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => addToCart(result)}
+                  >
+                    <ShoppingCartOutlined />
+                    Add to cart
+                  </Button>
+                </Row>
               </Col>
             </Card>
           ))}

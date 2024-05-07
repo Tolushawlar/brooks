@@ -54,10 +54,10 @@ const Cart = () => {
           <Col>
             {cart.map((book) => (
               <Card key={book.id} style={{ padding: 10, margin: 10 }}>
-                <h2>{book.volumeInfo.title}</h2>
-                <p>Author: {book.volumeInfo.authors?.join(", ")}</p>
-                <p>Publisher: {book.volumeInfo.publisher}</p>
-                <p>Published Date: {book.volumeInfo.publishedDate}</p>
+                <h2>{book.title}</h2>
+                <p>Author: {book.authors?.join(", ")}</p>
+                <p>Publisher: {book.publisher}</p>
+                <p>Published Date: {book.publishedDate}</p>
                 <Button
                   type="primary"
                   danger

@@ -20,7 +20,6 @@ import {
 const { Text } = Typography;
 const { Header } = Layout;
 
-
 const BookList = () => {
   const cart = useCart();
   const [books, setBooks] = useState([]);
@@ -74,6 +73,14 @@ const BookList = () => {
                       View
                     </Button>
                   </Link>
+                  <Button
+                    type="primary"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => addToCart(book)}
+                  >
+                    <ShoppingCartOutlined />
+                    Add to cart
+                  </Button>
                 </Card>
               </Col>
             ))}
